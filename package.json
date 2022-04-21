@@ -1,0 +1,36 @@
+{
+  "name": "insomnia-plugin-gitlab-wiki",
+  "version": "0.0.1",
+  "author": "cloudop <cloudop@gmail.com>",
+  "description": "Insomnia Gitlab Wiki",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com:cloudop/insomnia-plugin-gitlab-wiki.git"
+  },
+  "main": "main.js",
+  "insomnia": {
+    "name": "Gitlab Wiki",
+    "description": "Sync Request,Response and workspace with Gitlab Wiki Repository"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "dependencies": {
+    "simple-git": "^2.47.0",
+    "command-exists": "^1.2.9"
+  },
+  "devDependencies": {
+    "np": "^7.6.0"
+  },
+  "files": [
+    "main.js",
+    "Settings.js",
+    "Sync.js",
+    "SyncToLocal.js",
+    "SyncToServer.js",
+    "Wiki.js",
+    "Workspace.js",
+    "package.json"
+  ]
+}
