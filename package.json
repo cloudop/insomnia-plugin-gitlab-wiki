@@ -1,6 +1,6 @@
 {
   "name": "insomnia-plugin-gitlab-wiki",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "cloudop <cloudop@gmail.com>",
   "description": "Insomnia Gitlab Wiki",
   "license": "MIT",
