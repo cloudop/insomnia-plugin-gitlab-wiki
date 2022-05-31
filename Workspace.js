@@ -40,7 +40,9 @@ class Workspace {
             if (desc) {
                 expObj.resources[i].description = desc;
             }
-            this.commitWikiMd(expObj.resources[i], data.workspace._id, data.workspace);
+            let catalog = this.getRequestCatalog(expObj.resources, expObj.resources[i].parentId, expObj.resources[i]._type);
+            // console.log('catalog:'+ catalog);
+            this.commitWikiMd(expObj.resources[i], data.workspace._id, data.workspace, catalog);
             if (expObj.resources[i]._type === 'api_spec'
                 || expObj.resources[i]._type === 'cookie_jar') {
                 // remove this as it makes many merge conflicts
@@ -68,7 +70,7 @@ class Workspace {
         return expFilename;
     }
 
-    commitWikiMd(resource, workspaceId, workspace)
+    commitWikiMd(resource, workspaceId, workspace, catalog)
     {
         console.log(resource)
         let reqId = resource['_id'];
@@ -77,18 +79,14 @@ class Workspace {
         }
         let url = resource['url'];
         url = url.replace(/{{.*?}}/, '');
-        let urlArr = url.split('/');
-        let mdName = urlArr.pop();
-        let subDir = urlArr.join('/');
-        let reqres = '# '+ resource['name']+ "\n\n"
-            reqres += '请求方式 **'+ resource['method']+ "**\n\n";
+        let reqres = '请求方式 **'+ resource['method']+ "**\n\n";
             reqres += '请求地址 **'+ url+ "**\n\n";
             reqres += resource['description'];
-        let mdDir = __dirname+ '/git/'+ workspaceId+ subDir;
+        let mdDir = __dirname+ '/git/'+ workspaceId+ '/'+ catalog;
         if (!fs.existsSync(mdDir)) {
             fs.mkdirSync(mdDir, { recursive: true });
         }
-        let mdFileName = mdDir+ '/' + mdName+'.md';
+        let mdFileName = mdDir+ resource.name+'.md';
         fs.writeFileSync(mdFileName, reqres);
         const folder = this.getWorkingDir(workspace);
         const sGit = simpleGit(folder);
@@ -178,6 +176,31 @@ class Workspace {
 
     getWorkspaceFile(data) {
         return this.getWorkingDir(data.workspace) + '/workspace.json';
+    }
+
+    getRequestCatalog(resources, parentId, type) {
+        if (type !== 'request') {
+            return '';
+        }
+        let end = false;
+        let catalog = '';
+        do {
+            for (let i = 0; i < resources.length; i++) {
+                if (resources[i]._id === parentId) {
+                    if (resources[i]._type === 'request_group') {
+                        catalog = resources[i].name+ '/'+ catalog;
+                        parentId = resources[i].parentId;
+                        break;
+                    }
+
+                    if (resources[i]._type === 'workspace') {
+                        end = true;
+                        break;
+                    }
+                }
+            }
+        } while (end === false);
+        return catalog;
     }
 }
 

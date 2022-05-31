@@ -55,9 +55,12 @@ class Wiki {
 
     appJson(json)
     {
-        let jo = JSON.parse(json);
-        console.log(jo);
-        return jo;
+        try {
+            return JSON.parse(json);
+        } catch (e) {
+            console.log(e.message)
+            return '';
+        }
     }
 
     explainParam(key, env)
