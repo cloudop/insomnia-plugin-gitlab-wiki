@@ -29,6 +29,7 @@ class Wiki {
                 reqData = this.appJson(body.text);
                 break;
             default:
+                return '';
         }
         body.text = body.text.replace(/\t/g, '    ')
         let md = "\n## 请求参数\n```json\n"+ body.text+ "\n```";
